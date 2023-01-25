@@ -1,4 +1,4 @@
-#!!IF YOU ARE A STUDENT LOOKING AT THIS REPO PLEASE DO NOT STEAL/COPY CODE FROM THIS REPO!!
+#IF YOU ARE A STUDENT LOOKING AT THIS REPO PLEASE DO NOT STEAL/COPY CODE FROM THIS REPO!!
 All code here is published publically for proof in regards to my resume, and for recruiters to see my work on my github. All code is written by me, owned by me, and under standard copyright law.
 # Unix/Linux Shell Project
 
