@@ -1,0 +1,197 @@
+# This documentation will be in all lowercase, have chapters and sections to follow, and hopefully solve any issues the user may run into.
+
+# table of contents for documentation:
+-Chapter 1 "explaining files and the methods/functions":
+   -section 1 (Filename: myshell.c)
+   -section 2 (Filename: parser.c)
+   -section 3 (Filename: internal.c)
+   -section 4 (Filename: external.c)
+   -section 5 (Explaining all .h files, parser.h, internal.h, external.h)
+
+-Chapter 2 "how to operating myshell":
+   -section 1 (Operating myshell, compiling "make", and running "./myshell")
+   -section 2 (How to use internal commands)
+   -section 3 (How to use external commands)
+   -section 4 (How to understand what errors mean)
+
+-Chapter 3 "how redirection, piping, and running background programs work":
+   -section 1 (Redirection)
+   -section 2 (Piping)
+   -section 3 (Running programs in the background)
+
+-Chapter 4 "testing, how this program was tested":
+   -section 1 (Basic testing)
+   -section 2 (Testing redirection, piping, and background programs)
+   -section 3 (Testing bugs and what bugs were looked for)
+   -section 4 (Testing batch file)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# formatting information:
+   - '#' = headers/important topics
+   - '-' = formatting for indentation that allows the user to better digest what is presented on screen or in terminal/shell window
+   - '[]' = sections when reading through chapters
+   - '**' = chapters when reading through documentation
+   - 5 blank lines are present between each header except the very first header.
+   - on the 3'rd line of each of those 5 blank line gaps exists a row of '-' characters
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# start of documentation details, all chapters present and given sections per chapter (!! reminder all characters in documentation are lowercased !!):
+
+*Chapter: 1, "explaining files and the methods/functions"*:
+  [myshell.c]
+    - methods:
+     - main():
+      - method type is integer
+      - parameters are the defualt arguments for main
+      - this main function is what runs the myshell over and over again via a while loop that controls the checking of input, output of commands, edge case checking, some of the error functionality, and calling of all other functionality to other functions from other files.
+
+  [parser.c]
+    - methods:
+     - parseinput()
+      - The type is a structure named Count which holds an array of CMDstructs, and some extra info for parsing to be possible.
+      - The only parameter is just the command line in which we parse.
+      - This function is preforming parsing. It does this by calling parseSingleCmd(), then seperates commands from arguments based on an indicator of a pipe character or a ampersand character.
+     - parseSingleCmd()
+      - The type is a structure named CMDstruct which holds a bunch of information about what is seen in the entire command line.
+      - The only parameter is just the command line in which we parse.
+      - This function is preforming parsing of a single command. It is checking for characters or words to update flag variables and help save information that will later guide other functions. 
+
+  [internal.c]
+    - methods:
+     - checkForCmd()
+      - The type is integer.
+      - The only parameter is an array of strings that are checking the first element/argument given from the command line to see if it is an internal command
+      - This function is preforming a check on the first element of a given array of strings. If the first element is a internal command then it will return 1 on success and 0 on failure.
+
+     - cd()
+      - The type is void.
+      - The only parameter is a CMDstruct that is used to check for arguments given.
+      - The function is preforming a check for arguments, if no arguments are given it will display the current directory of the user. If there is an argument given then it will move the user into the given directory if it's a valid one.
+
+     - clrScrn()
+      - The type is void.
+      - The only parameter is a CMDstruct that is used to check for the number of arguments given. This is because only "clr" should be typed in the shell when using this command. Once "clr" is typed then the entire shell screen will be cleared.
+
+     - dirCMD()
+      - The type is void.
+      - The parameters for the function are a global string "path" that represents a directory path, and and file pointer named writeFile that is used for supporting redirection.
+      - This function is printing out every file in a directory, or when given a directory name/path then it will print out every file in the given directory.
+
+     - callDir()
+      - The type is integer.
+      - The parameters are a count integer, array of strings that are arguments from the command line, and a file pointer named writeFile that is used for supporting redirection.
+      - The function is preforming a direct call to the dirCMD() function. It is giving it all of the necessary parameters and information to work. It is also checking for the number of given arguments via the count parameter. Based on the count of arguments given in the command line it will run the dirCMD() function asking it to display details of current directory, given directory, or present an error due to to many arguments. 
+
+     - environ()
+      - The type is void.
+      - The parameter is a file pointer named writeFile that is used for supporting redirection.
+      - The function is preforming a display of the current environment of the shell.
+      
+     - echo()
+      - The type is void.
+      - The parameters are a file pointer named writeFile that is used for supporting redirection and a CMDstruct named cmdLine that is used taking all the arguments given.
+      - The function is preforming a display of whatever is typed after it in the shell. Meaning it takes all arguments after "echo" is typed and will print them on the shell screen for the user to see.
+
+     - help()
+      - The type is void.
+      - The parameters are a file pointer named writeFile that is used for supporting redirection and a CMDstruct named help which is used to allow us to pipe this function to more by defualt.
+      - The function preforms an opening of a file name readme_doc which is a user manual for the shell. It will display this file onto the shell screen for the user to read but it also by defualt pipes the command to the "more" command found in the /bin folder externally. This allows you to read the user manual in a nicer manner rather than scrolling through and having the entire file printing on your screen at once. The function also supports redirection, however, since the function is piping to more by defualt it has a check case implemented to look out for redirection and turn of the piping to "more" if redirection is present.
+
+     - pauseCMD()
+      - The type is void.
+      - There are no parameters.
+      - The function preforms a pause on the shell when called. This pause will freeze all operation of the shell until an enter is pressed.
+
+     - callSpecificFunc()
+      - The type is void.
+      - The parameters are a CMDstruct called funcName which is used to match up the command given and the name of all internal commands, a file pointer named writeFile, and a file pointer named readFile. Both of these file pointer parameters are present to support redirection in the shell.
+      - The function preforms a check for an internal command and then will call the specific function that correlates with the given command name. It also prints a new line character if no command or arguments are given. The list of command names it is checking for are present in if statements and are the names of all of the internal commands. If an argument is given that is not an external or internal command then an error is printed.
+
+  [external.c]
+    - methods:
+     - externalCommands()
+      - The type is void
+      - The parameters are a CMDstruct named cmdLine that is taking in command names, arguments, filenames, and flag variables. A file pointer for writing and reading, one named write and the other named read which are used to preform redirection.
+      - The function is preforming all of the necessary checks, creating a path string from calling find(), forking and executing, dup()'ing for file redirection by opening and closing STDOUT and STDIN, updating the environment, and calling waitpid() on the parent. If anything is wrong with necessary tasks an error will be presented.
+
+     - find()
+      - The type is character pointer (String)
+      - The parameter is a string named command
+      - The function is building a directory path to feed into externalCommands() for running the external commands. It is doing this borrowing information from our environment, using access() to check the validity, strcpy() and strcat() to build a new path string, and if a new path string can not be creating then it returns a NULL pointer.
+
+  [all .h files, parser.h, internal.h, and external.h]
+    - Basic prototyping is implemented into all of the ".h" files
+    - Structure creation information
+     - All structs present:
+      - parser.h structures info:
+       - cmdstruct:
+        - This structure is for holding information regarding what is parsed on the command line. It has a count variable representing the count of elements in parseArray. It has a inputFile variable for holding the name of an input file in regards to redirection. It has a outputFile variable that holds the name of an output file in regards to redirection. It has flag variables for character checks in the command line. It is checking for input redirection character '<' , output redirection characters '>' or '>>' , ampersand characters '&' , and lastly pipe characters '|'. When these characters are discovered the flag variable is set to 1 rather than 0 to say that the character is present. There is a variable that is a array of strings which is called parseArray. The parseArray holds all the commands and arguments of one command input. It is what is used to update all other variables in the structure. Lastly there is an errorFlag variable which will update to 1 when an error is present causing the shell to not malfunction. This is important because we need it to understand when not to call upon or change sensitive data,files,or anything else that we would change normally.
+
+       - countindex:
+        - This structure is named Count and is used to have an array of CMDstructs named cmdLineArray and a count variable that will tell us how many commands with all their arguments are given. It's purpose is to allow us to pipe one command into another. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+*Chapter: 2, "how to operating myshell"*:
+  [Operating, compiling "make", and running "./myshell"]
+    - How do you operate "myshell"?
+     - You have to first start off compiling the entire program, and then run it. You compile the entire program by typing "make" when in the correct directory. This should compiling multiple .c files and not present any errors. If errors are presented please make sure you have all files needed in your directory and check to make sure you are currently working in said directory. After you "make" we now need to run "myshell". You run myshell by typing into the current shell "./myshell" or "myshell". This should start the shell program and you should see "myShell-("current directory name")>" on your screen taking over the previous shell. Now you are free to do what you please with myshell. It works and operates similar to how the standard Unix and Linux shells do. It can do all Unix shell commands, it has some built in internal commands (see user manual for those by typing "help" in myshell) and will present errors when commands are preformed incorrectly.
+
+  [How to use internal commands]
+    - We will go off a list of all the internal commands one by one, if you want to use these commands type them into myshell:
+     - "cd" - No argument will print the current directory, 1 argument will move the user into the given directory. This can take no arguments or one.
+     - "dir" - No argument prints the content of the current directory. 1 argument will print the content of that directory. This can take no arguments or one.
+     - "pause" - pauses the shell until enter is pressed.
+     - "environ" - no arguments, prints all the environment variables. These are variables the shell has access to whenever and can be used by any program.
+     - "help" - displays this document with the more functionality.
+     - "clr" - no arguments, clears the console output.
+     - "echo" - prints out the line you typed, excluding 'echo'.
+     - "quit" or "exit" - quit the shell.
+
+  [How to use external commands]
+    - Since this is only documentation for myshell program I will not be providing a lot of detail on the external commands. You can run any standard Unix shell commands in myshell since it searched the /bin folder. Any external command that can be found in the /bin folder can be ran in myshell if provided the correct arguments and used properly.
+
+  [How to understand what errors mean]
+    - Errors in myshell are presented every time a command was run improperly. A error can also be presented when myshell is being used correctly. If an error is found and nothing is printed or prompted to the user than it means you have found a bug. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+*Chapter: 3, "how redirection, piping, and running background programs work"*
+  [Redirection]
+    - Redirection comes from characters usage in the myshell command line. Redirection is when you give a input or output file name and use the characters '<', '>', and '>>' to describe what you want to do. '<' is used for input redirection, and '>' or '>>' is used for output redirection, however, '>>' will append to the end of a file given. The alter STDIN and STDOUT to whatever is given for the executing process. An example of how to use redirection in myshell is here, EX: [command] > [file], [command] >> [file2], [file] < [command]
+
+  [Piping]
+    - This shell also supports piping, which is another form of redirection. Piping is used in a similar way with regular input and output redirection, using the pipe symbol '|' between commands. Piping takes the output of one command and uses it as input to for the next command. ex: [command1] | [command2]
+
+  [Running programs in the background]
+    - This shell also supports commands running in the background. Which will do exactly what it says it will, run a program or process in the background so that you can return to the shell and continue work. To do this, include an ampersand '&' at the end of a command. This allows you to immediately return back to the shell to run more commands. Your process will run in the background.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+*Chapter: 4, "testing, how this program was tested"*
+  [Basic testing]
+    - The basic testing for this myshell program was to do things like hit enter with nothing in it, enter commands, and to enter random characters that mean nothing to the shell. These basic things returned their expected results of errors or command functions. I would also test any edge cases I told myshell to account for. A great example of an edge case I told myshell to account for is just hitting enter on an empty command line. All it does is just present the shell back to you. To do this I had to give a ssize_t variable to the shell to look for and if it was a certain size it means it looks for commands and else just prompts the shell again. "exit" and "quit" are also technically edge cases since they aren't functions like the ones seen in the internal.c file. This is because there is no need to put them in there and it's more important for them to be immediately present in the myshell.c file where checks are being made. While building the shell I made sure to put comments on the error outputs so that I could tell where the errors come from. This helped a lot while testing myshell since I don't have specific errors to go off of and they don't always come from where you are currently working in your program. Once finished all the testing for other sections such as redirection, piping, background programs, external commands, and etc... I looked for any memory leaks, by using the free() I was able to free up any memory leaks present in my code. I also made sure to actively use strdup() when needed or any other functions to allow me to duplicate memory or move it into a safer position. This is because certain functions like getline() cause many issues with variables it alters. These issues are majority memory related and are overlooked by the c compiler so it's up to me to clear all memory leaks.
+
+  [Testing redirection, piping, and background programs]
+    - Once all basic functionality of myshell was implemented it was time to test redirection, piping, and background programs. I first tested redirection which didn't seem to give me any problems. The output worked perfectly by creating a new file or re writing if the file name was already found. The appending version also worked just fine. I made sure to use the modes that incorporate 'b' at the end such as "rb" or "wb" because it just is a better version of the "r" and "w" modes. It makes sure to complete the reading and writing processes properly rather than going character by character it goes bit by bit. I tested output by creating a file and using it, having the redirection create a file, and appending the a file just created and not created. When doing the input I tested it by giving it a file I created and puting command outputs in there. It worked just fine and presented no errors on the shell or in the output. After redirection I moved onto the piping which was similar to redirection. This was very hard since it is decently complicated. I made sure to add more to my parser.c fle that would allow me to properly parse multiple commands section by section. This would make it so I can determine what is on the left and right of a present pipe. I made a seperator that was a pipe or amepersand character, this character did exactly that seperate the commands into an array of commands. Then I made it so amerpsand doesn't function like a pipe, used my CMDstruct to determine what we see a pipe or an ampersand. Then created the functionality to run one command into another via a pipe and added the running a background program functionality as well. The background program functionality was simple since it was just not running waitpid() on the parent if an amerpsand is present. Piping was the very important thing to thuroughly test however, so I did just that. I started off testing ls | ls to look for any errors. That command sequence should throw errors I know and when doing it in myshell it did not. I then tried "ls | grep make" which should only show me my makefile in the output and that worked as well. Once that worked I knew the pipe functionality was working. I further looked for bugs regarding redirection and piping, piping complicated commands, and improper syntax usage in the shell. Everything came back with green flags and no errors were present that I could find.
+
+  [Testing bugs and what bugs were looked for]
+    - When testing bugs I found I would make sure to create my own personal error messages and strategically implement printf statements where I could to see where the problem was happening. I also made use of stderror #'s and looking the errors up in the manpages since I came into contact with a few very complicated errors. Some errors I ran into were your standard stderror with explanation given, and segment core dumps, but I had a few that were memory related due to free(), and other functions removing memory or me not duplicating/moving memory from some functions. I had memory errors from my own arrays I was creating like my char** and CMDstruct** arrays. Especially the array of CMDstructs because that becomes quite complicated with memory usage since it not longer saves in a nice line, rather saves randomly and not ordered at all. You also need to give it a null pointer manually at the end. The hardest bug I found was regarding dup and it not properly closing STDIN which caused some difficult error messages and prompts on my screen. That was fixed once I looked up more about dup() and how it works. When looking for bugs I made sure to look for all the basic ones like when you pipe a command into another, or when using redirection. Some harder ones I looked for were doing multiple pipes into complicated commands. I tested "ls | grep a | hexdump -C | ls" which worked. My parser.c ran into many bugs since it's the most complicated out of all the other .c files. It was having issues with memory and would regurlarly cause core dumps. It had issues with updating data properly such as all my flag variables. It took a lot of time and printing to STDOUT to figure out what variables were being updated and which ones weren't and why that was the case. I ended up spending an entire day just for bug testing parser.c. Most of this difficulty came from the Count parseInput() method where I create the array of CMDstructs that end up being used in myshell.c. My results from all of this testing is a much better myshell program. I think I have done a good amount of bug testing and searching to not have many key issues in my program. I am not aware of any huge issues cause I don't think there are any.
+
+  [Testing batch file]
+    - This was a pretty simple thing for me to test. Once i added the functionality to use a batch file with myshell I tested it by creating a batchFileTest in which I put lots of commands into. The commands ranged from simple to complicated and some used redirection, piping, and background tasks. Once I first tested it I found that there was no errors however it kept running the commands in the batch file over and over again. I then had to add the functionality in myshell.c to not let it keep going back to the shell whenever a batch file is used. After that the batch file was working and no further tests needed to be made since its only just taking an input.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
