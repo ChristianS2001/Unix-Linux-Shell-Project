@@ -1,6 +1,8 @@
-# Project-2-F22
+#!!IF YOU ARE A STUDENT LOOKING AT THIS REPO PLEASE DO NOT STEAL/COPY CODE FROM THIS REPO!!
+All code here is published publically for proof in regards to my resume, and for recruiters to see my work on my github. All code is written by me, owned by me, and under standard copyright law.
+# Unix/Linux Shell Project
 
-#  Project 2: Developing a Linux Shell
+#  Project: Developing a Linux Shell
 **NOTE** What follows is the only the introduction to the problem statement.  
 **The full Project 2 description is [here](https://github.com/CIS-3207-F22/Project-2-f22/blob/main/Project%202%20Developing%20a%20Linux%20Shell.pdf)**.   
 
